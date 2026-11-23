@@ -1,0 +1,1249 @@
+const _0x5d8d31 = _0x35c8;
+(function (_0x3f389f, _0x118be9) {
+  const _0x467a1d = _0x35c8,
+    _0xcdd9ec = _0x3f389f();
+  while (!![]) {
+    try {
+      const _0x2b7927 =
+        (-parseInt(_0x467a1d(0x1f7)) / 0x1) *
+          (parseInt(_0x467a1d(0x1f0)) / 0x2) +
+        parseInt(_0x467a1d(0x17c)) / 0x3 +
+        -parseInt(_0x467a1d(0x1d3)) / 0x4 +
+        parseInt(_0x467a1d(0x1e1)) / 0x5 +
+        (parseInt(_0x467a1d(0x19e)) / 0x6) *
+          (-parseInt(_0x467a1d(0x1ae)) / 0x7) +
+        (parseInt(_0x467a1d(0x1b9)) / 0x8) *
+          (parseInt(_0x467a1d(0x192)) / 0x9) +
+        parseInt(_0x467a1d(0x1c2)) / 0xa;
+      if (_0x2b7927 === _0x118be9) break;
+      else _0xcdd9ec["push"](_0xcdd9ec["shift"]());
+    } catch (_0x81ac27) {
+      _0xcdd9ec["push"](_0xcdd9ec["shift"]());
+    }
+  }
+})(_0x953d, 0x7f770);
+const fs = require("fs"),
+  util = require("util"),
+  {
+    proto,
+    downloadContentFromMessage,
+    generateWAMessageFromContent,
+    WAProto,
+    AnyWASocket,
+    toBuffer,
+    getContentType,
+    generateForwardMessageContent,
+    getDevice,
+    generateThumbnail,
+    prepareWAMessageMedia,
+    areJidsSameUser,
+    jidNormalizedUser,
+    isJidGroup,
+    isJidBroadcast,
+    jidDecode,
+    S_WHATSAPP_NET,
+  } = require("@whiskeysockets/baileys"),
+  { download, parseMention, getBuffer } = require(_0x5d8d31(0x1ac)),
+  { statistics, Users, groupManage } = require(_0x5d8d31(0x1c9));
+let config = require(_0x5d8d31(0x1f8));
+const { default: axios } = require(_0x5d8d31(0x172)),
+  inviteInfo = async (_0x875d0a) => {
+    const _0x1f8a21 = _0x5d8d31;
+    try {
+      const _0x30064f = await client[_0x1f8a21(0x203)]({
+          tag: "iq",
+          attrs: { type: "get", xmlns: _0x1f8a21(0x1ec), to: _0x1f8a21(0x17f) },
+          content: [{ tag: _0x1f8a21(0x20d), attrs: { code: _0x875d0a } }],
+        }),
+        _0x556f33 = getBinaryNodeChild(_0x30064f, _0x1f8a21(0x191)),
+        _0x407ab2 = getBinaryNodeChild(_0x556f33, _0x1f8a21(0x207));
+      let _0x5a7ae1, _0x794af;
+      _0x407ab2 &&
+        ((_0x5a7ae1 = getBinaryNodeChild(_0x407ab2, _0x1f8a21(0x1dc))?.[
+          _0x1f8a21(0x174)
+        ]?.[_0x1f8a21(0x1e8)]()),
+        (_0x794af = _0x407ab2[_0x1f8a21(0x19b)]["id"]));
+      const _0x29acf7 = _0x556f33["attrs"]["id"][_0x1f8a21(0x1ee)]("@")
+          ? _0x556f33[_0x1f8a21(0x19b)]["id"]
+          : _0x556f33[_0x1f8a21(0x19b)]["id"] + _0x1f8a21(0x17f),
+        _0x46e8dc = {
+          id: _0x29acf7,
+          subject: _0x556f33[_0x1f8a21(0x19b)]?.[_0x1f8a21(0x1c0)],
+          creator: _0x556f33[_0x1f8a21(0x19b)]?.[_0x1f8a21(0x1eb)],
+          creation: _0x556f33[_0x1f8a21(0x19b)]?.[_0x1f8a21(0x176)],
+          desc: _0x5a7ae1,
+          descId: _0x794af,
+        };
+      return _0x46e8dc;
+    } catch (_0x4b8110) {
+      return console[_0x1f8a21(0x18d)](_0x4b8110), ![];
+    }
+  },
+  setStatus = (_0x52e4e2) => {
+    const _0x506c75 = _0x5d8d31;
+    return (
+      client[_0x506c75(0x203)]({
+        tag: "iq",
+        attrs: {
+          to: _0x506c75(0x1a5),
+          type: _0x506c75(0x202),
+          xmlns: _0x506c75(0x18e),
+        },
+        content: [
+          {
+            tag: _0x506c75(0x18e),
+            attrs: {},
+            content: Buffer[_0x506c75(0x193)](_0x52e4e2, _0x506c75(0x175)),
+          },
+        ],
+      }),
+      _0x52e4e2
+    );
+  },
+  downloadMediaMessage = async (_0x25b1a9) => {
+    const _0x25abf4 = _0x5d8d31;
+    m =
+      _0x25b1a9[_0x25abf4(0x1e4)] !== null
+        ? _0x25b1a9
+        : _0x25b1a9[_0x25abf4(0x1d5)];
+    const _0x4310aa = {
+        imageMessage: _0x25abf4(0x1cd),
+        videoMessage: _0x25abf4(0x1a1),
+        stickerMessage: _0x25abf4(0x1b6),
+        documentMessage: _0x25abf4(0x187),
+        audioMessage: _0x25abf4(0x197),
+      },
+      _0x233c5d = await downloadContentFromMessage(
+        m,
+        _0x4310aa[_0x25b1a9["mtype"]],
+      );
+    return await toBuffer(_0x233c5d);
+  };
+function cMod(
+  _0x2d0301,
+  _0x50b521,
+  _0x1fa474 = "",
+  _0x291766 = client["user"]["id"],
+  _0x452127 = {},
+) {
+  const _0x5f2af0 = _0x5d8d31;
+  let _0x4e99be = getContentType(_0x50b521["message"]),
+    _0x22344f = _0x4e99be === _0x5f2af0(0x184);
+  _0x22344f &&
+    (_0x4e99be = Object["keys"](
+      _0x50b521[_0x5f2af0(0x19c)]["ephemeralMessage"]["message"],
+    )[0x0]);
+  let _0x55ebe4 = _0x22344f
+      ? _0x50b521["message"][_0x5f2af0(0x184)]["message"]
+      : _0x50b521["message"],
+    _0x1b4a46 = _0x55ebe4[_0x4e99be];
+  if (typeof _0x1b4a46 === "string")
+    _0x55ebe4[_0x4e99be] = _0x1fa474 || _0x1b4a46;
+  else {
+    if (_0x1fa474 || _0x1b4a46[_0x5f2af0(0x199)])
+      _0x1b4a46[_0x5f2af0(0x199)] = _0x1fa474 || _0x1b4a46[_0x5f2af0(0x199)];
+    else {
+      if (_0x1b4a46[_0x5f2af0(0x1c8)])
+        _0x1b4a46[_0x5f2af0(0x1c8)] = _0x1fa474 || _0x1b4a46[_0x5f2af0(0x1c8)];
+    }
+  }
+  if (typeof _0x1b4a46 !== "string")
+    _0x55ebe4[_0x4e99be] = { ..._0x1b4a46, ..._0x452127 };
+  if (_0x50b521[_0x5f2af0(0x1a7)][_0x5f2af0(0x16c)])
+    _0x291766 = _0x50b521[_0x5f2af0(0x1a7)][_0x5f2af0(0x16c)] =
+      _0x291766 || _0x50b521["key"][_0x5f2af0(0x16c)];
+  else {
+    if (_0x50b521[_0x5f2af0(0x1a7)][_0x5f2af0(0x16c)])
+      _0x291766 = _0x50b521[_0x5f2af0(0x1a7)][_0x5f2af0(0x16c)] =
+        _0x291766 || _0x50b521[_0x5f2af0(0x1a7)][_0x5f2af0(0x16c)];
+  }
+  if (
+    _0x50b521[_0x5f2af0(0x1a7)][_0x5f2af0(0x1d1)]["includes"]("@s.whatsapp.net")
+  )
+    _0x291766 = _0x291766 || _0x50b521[_0x5f2af0(0x1a7)][_0x5f2af0(0x1d1)];
+  else {
+    if (_0x50b521["key"][_0x5f2af0(0x1d1)]["includes"]("@broadcast"))
+      _0x291766 = _0x291766 || _0x50b521[_0x5f2af0(0x1a7)]["remoteJid"];
+  }
+  return (
+    (_0x50b521[_0x5f2af0(0x1a7)]["remoteJid"] = _0x2d0301),
+    (_0x50b521[_0x5f2af0(0x1a7)][_0x5f2af0(0x1d7)] = areJidsSameUser(
+      _0x291766,
+      client["user"]["id"],
+    )),
+    _0x452127[_0x5f2af0(0x1e9)] &&
+      (_0x50b521["message"][_0x4e99be][_0x5f2af0(0x204)]["mentionedJid"] =
+        _0x452127["mentions"]),
+    proto[_0x5f2af0(0x213)][_0x5f2af0(0x171)](_0x50b521)
+  );
+}
+async function sendFile(_0x1c3636, _0x4d8347, _0x527251, _0x22c09f = {}) {
+  const _0x452543 = _0x5d8d31;
+  let _0x5b9f10 = "audio/mpeg",
+    _0x2d6013 = { fileName: _0x22c09f["fileName"] || "", ..._0x22c09f };
+  if (_0x22c09f[_0x452543(0x197)])
+    _0x2d6013[_0x452543(0x197)] = Buffer[_0x452543(0x1ba)](_0x4d8347)
+      ? { buffer: _0x4d8347, mimetype: _0x5b9f10 }
+      : { url: _0x4d8347, mimetype: _0x5b9f10 };
+  if (_0x22c09f[_0x452543(0x187)])
+    _0x2d6013["document"] = Buffer[_0x452543(0x1ba)](_0x4d8347)
+      ? { buffer: _0x4d8347, mimetype: _0x22c09f[_0x452543(0x1f5)] }
+      : { url: _0x4d8347, mimetype: _0x22c09f[_0x452543(0x1f5)] };
+  if (_0x22c09f[_0x452543(0x1cd)])
+    _0x2d6013[_0x452543(0x1cd)] = Buffer[_0x452543(0x1ba)](_0x4d8347)
+      ? { buffer: _0x4d8347, mimetype: _0x22c09f[_0x452543(0x1f5)] }
+      : { url: _0x4d8347, mimetype: _0x22c09f[_0x452543(0x1f5)] };
+  await client[_0x452543(0x16b)](_0x1c3636, _0x2d6013, { quoted: _0x527251 })[
+    _0x452543(0x1da)
+  ](() => {
+    const _0x3edd16 = _0x452543;
+    try {
+      let { size: _0x156860 } = fs[_0x3edd16(0x1f9)](_0x4d8347);
+      statistics(_0x3edd16(0x1b7), _0x156860),
+        _0x22c09f["unlink"] &&
+          (console["log"]("unlink"), fs["unlinkSync"](_0x4d8347));
+    } catch (_0x3bbe29) {
+      console[_0x3edd16(0x18d)](_0x3bbe29);
+    }
+  });
+}
+async function sendGroupV4Invite(
+  _0x558a31,
+  _0x3ee76d,
+  _0x25202a,
+  _0x2e00f2,
+  _0x132061 = _0x5d8d31(0x1f6),
+  _0x395c67,
+  _0x21a3ce = _0x5d8d31(0x206),
+  _0x331045 = {},
+) {
+  const _0x87cd65 = _0x5d8d31;
+  let _0x230e18 = WAProto["Message"][_0x87cd65(0x171)]({
+    groupInviteMessage: WAProto["GroupInviteMessage"]["fromObject"]({
+      inviteCode: _0x25202a,
+      inviteExpiration: _0x2e00f2
+        ? parseInt(_0x2e00f2)
+        : +new Date(new Date() + 0x3 * 0x5265c00),
+      groupJid: _0x558a31,
+      groupName: _0x132061
+        ? _0x132061
+        : (await client[_0x87cd65(0x16e)](_0x558a31))[_0x87cd65(0x1c0)],
+      jpegThumbnail: _0x395c67
+        ? (await getBuffer(_0x395c67))[_0x87cd65(0x201)]
+        : "",
+      caption: _0x21a3ce,
+    }),
+  });
+  const _0x38b02a = generateWAMessageFromContent(
+    _0x3ee76d,
+    _0x230e18,
+    _0x331045,
+  );
+  await client[_0x87cd65(0x1de)](_0x3ee76d, _0x38b02a["message"], {
+    messageId: _0x38b02a["key"]["id"],
+  });
+}
+async function sendListM(
+  _0x14b060,
+  _0xe32d32,
+  _0x2661f6,
+  _0x5d96f2,
+  _0x23d713 = {},
+) {
+  const _0x2ecdfb = _0x5d8d31;
+  config[_0x2ecdfb(0x1b4)] &&
+    (await client[_0x2ecdfb(0x16d)](_0x2ecdfb(0x1b4), _0x14b060));
+  let _0xc05c7b = WAProto[_0x2ecdfb(0x1f1)][_0x2ecdfb(0x171)]({
+      listMessage: WAProto["ListMessage"][_0x2ecdfb(0x171)]({
+        buttonText: _0xe32d32["buttonText"],
+        description: _0xe32d32[_0x2ecdfb(0x207)],
+        listType: 0x1,
+        sections: [{ title: _0xe32d32["title"], rows: [..._0x2661f6] }],
+        ..._0x23d713,
+      }),
+    }),
+    _0x144402 = generateWAMessageFromContent(_0x14b060, _0xc05c7b, {
+      quoted: _0x5d96f2,
+      userJid: _0x14b060,
+      contextInfo: { ..._0x23d713 },
+    });
+  return await client[_0x2ecdfb(0x1de)](
+    _0x14b060,
+    _0x144402[_0x2ecdfb(0x19c)],
+    { messageId: _0x144402[_0x2ecdfb(0x1a7)]["id"] },
+  );
+}
+async function sendContact(
+  _0x9a2db,
+  _0x534568,
+  _0x45f52c,
+  _0x354b0f,
+  _0x376432,
+) {
+  const _0xa5b60e = _0x5d8d31;
+  let _0x2f1dcb = _0x534568[_0xa5b60e(0x196)](/[^0-9]/g, "");
+  const _0xb72df8 =
+    "BEGIN:VCARD\x0a" +
+    "VERSION:3.0\x0a" +
+    _0xa5b60e(0x16a) +
+    _0x45f52c +
+    "\x0a" +
+    _0xa5b60e(0x20c) +
+    _0xa5b60e(0x1b3) +
+    _0x2f1dcb +
+    ":+" +
+    _0x2f1dcb +
+    "\x0a" +
+    _0xa5b60e(0x1ce);
+  return client[_0xa5b60e(0x16b)](
+    _0x9a2db,
+    {
+      contacts: { displayName: _0x45f52c, contacts: [{ vcard: _0xb72df8 }] },
+      mentions: _0x376432 ? _0x376432 : [],
+    },
+    { quoted: _0x354b0f },
+  );
+}
+function _0x35c8(_0x443397, _0x4c2a28) {
+  const _0x953d6d = _0x953d();
+  return (
+    (_0x35c8 = function (_0x35c8fc, _0x2935cc) {
+      _0x35c8fc = _0x35c8fc - 0x166;
+      let _0x319eb5 = _0x953d6d[_0x35c8fc];
+      return _0x319eb5;
+    }),
+    _0x35c8(_0x443397, _0x4c2a28)
+  );
+}
+async function sendFileFromUrl(
+  _0x4ffd9d,
+  _0x4d42e4,
+  _0x5aa140 = "",
+  _0x2f284d = "",
+  _0x5cf73,
+  _0x42c89a,
+  _0x291d75 = {},
+  _0x2faf2e = {},
+) {
+  const _0x52aa5f = _0x5d8d31;
+  let _0x26f875;
+  try {
+    await client[_0x52aa5f(0x1f2)](_0x4ffd9d);
+    config[_0x52aa5f(0x1b4)] &&
+      (await client[_0x52aa5f(0x16d)](_0x52aa5f(0x1b4), _0x4ffd9d));
+    const { filepath: _0xe43543, mimetype: _0x4154e0 } = await download(
+      _0x4d42e4,
+      _0x42c89a,
+      _0x2faf2e,
+    );
+    let { size: _0x27d947 } = fs[_0x52aa5f(0x1f9)](_0xe43543);
+    statistics(_0x52aa5f(0x1b7), _0x27d947),
+      (_0x26f875 = _0xe43543),
+      (_0x5cf73 = _0x5cf73 ? parseMention(_0x5cf73) : []);
+    let _0x30daaf = _0x4154e0["split"]("/")[0x0],
+      _0x5d39d9 = await generateThumbnail(_0xe43543, _0x30daaf);
+    if (_0x4154e0 == _0x52aa5f(0x205) || _0x291d75["gif"]) {
+      const _0x16ff19 = await prepareWAMessageMedia(
+        {
+          video: { url: _0xe43543 },
+          caption: _0x5aa140,
+          gifPlayback: !![],
+          gifAttribution: 0x1,
+          mentions: _0x5cf73,
+          jpegThumbnail: _0x5d39d9,
+          ..._0x291d75,
+        },
+        { upload: client[_0x52aa5f(0x1cb)] },
+      );
+      let _0x290c5a = generateWAMessageFromContent(
+        _0x4ffd9d,
+        { videoMessage: _0x16ff19[_0x52aa5f(0x1b0)] },
+        { quoted: _0x2f284d, mediaUploadTimeoutMs: 0x927c0 },
+      );
+      await client[_0x52aa5f(0x1de)](_0x4ffd9d, _0x290c5a[_0x52aa5f(0x19c)], {
+        messageId: _0x290c5a[_0x52aa5f(0x1a7)]["id"],
+      });
+    } else {
+      if (_0x30daaf == _0x52aa5f(0x1a1)) {
+        const _0x220df0 = await prepareWAMessageMedia(
+          {
+            video: { url: _0xe43543 },
+            caption: _0x5aa140,
+            mentions: _0x5cf73,
+            jpegThumbnail: _0x5d39d9,
+            ..._0x291d75,
+          },
+          { upload: client[_0x52aa5f(0x1cb)] },
+        );
+        let _0x8bd20 = generateWAMessageFromContent(
+          _0x4ffd9d,
+          { videoMessage: _0x220df0[_0x52aa5f(0x1b0)] },
+          { quoted: _0x2f284d, mediaUploadTimeoutMs: 0x927c0 },
+        );
+        await client[_0x52aa5f(0x1de)](_0x4ffd9d, _0x8bd20[_0x52aa5f(0x19c)], {
+          messageId: _0x8bd20[_0x52aa5f(0x1a7)]["id"],
+        });
+      } else {
+        if (_0x30daaf == _0x52aa5f(0x1cd)) {
+          const _0x29b6b1 = await prepareWAMessageMedia(
+            {
+              image: { url: _0xe43543 },
+              caption: _0x5aa140,
+              mentions: _0x5cf73,
+              jpegThumbnail: _0x5d39d9,
+              ..._0x291d75,
+            },
+            { upload: client["waUploadToServer"] },
+          );
+          let _0x1ca419 = generateWAMessageFromContent(
+            _0x4ffd9d,
+            { imageMessage: _0x29b6b1[_0x52aa5f(0x1ff)] },
+            { quoted: _0x2f284d, mediaUploadTimeoutMs: 0x927c0 },
+          );
+          await client["relayMessage"](_0x4ffd9d, _0x1ca419[_0x52aa5f(0x19c)], {
+            messageId: _0x1ca419[_0x52aa5f(0x1a7)]["id"],
+          });
+        } else {
+          if (_0x30daaf == _0x52aa5f(0x197)) {
+            let _0x30f179;
+            await client["sendPresenceUpdate"](_0x52aa5f(0x1c6), _0x4ffd9d);
+            const _0x2855e1 = await prepareWAMessageMedia(
+              {
+                [_0x291d75["audio"] ? _0x52aa5f(0x197) : "document"]: {
+                  url: _0xe43543,
+                },
+                mimetype: _0x4154e0,
+                fileName: _0x291d75["fileName"],
+              },
+              { upload: client[_0x52aa5f(0x1cb)] },
+            );
+            if (_0x291d75["audio"])
+              _0x30f179 = { audioMessage: _0x2855e1[_0x52aa5f(0x190)] };
+            else _0x30f179 = { documentMessage: _0x2855e1["documentMessage"] };
+            let _0x34dbee = generateWAMessageFromContent(_0x4ffd9d, _0x30f179, {
+              quoted: _0x2f284d,
+              mediaUploadTimeoutMs: 0x927c0,
+            });
+            await client[_0x52aa5f(0x1de)](_0x4ffd9d, _0x34dbee["message"], {
+              messageId: _0x34dbee[_0x52aa5f(0x1a7)]["id"],
+            });
+          } else {
+            const _0x209772 = await prepareWAMessageMedia(
+              {
+                document: { url: _0xe43543 },
+                mimetype: _0x4154e0,
+                fileName: _0x291d75["fileName"],
+              },
+              { upload: client[_0x52aa5f(0x1cb)] },
+            );
+            let _0x49afbb = generateWAMessageFromContent(
+              _0x4ffd9d,
+              { documentMessage: _0x209772["documentMessage"] },
+              { quoted: _0x2f284d, mediaUploadTimeoutMs: 0x927c0 },
+            );
+            await client[_0x52aa5f(0x1de)](
+              _0x4ffd9d,
+              _0x49afbb[_0x52aa5f(0x19c)],
+              { messageId: _0x49afbb[_0x52aa5f(0x1a7)]["id"] },
+            );
+          }
+        }
+      }
+    }
+    fs[_0x52aa5f(0x20a)](_0xe43543);
+  } catch (_0x136655) {
+    _0x26f875 ? fs[_0x52aa5f(0x20a)](_0x26f875) : "",
+      client["sendMessage"](
+        _0x4ffd9d,
+        { text: util[_0x52aa5f(0x194)](_0x136655) },
+        { quoted: _0x2f284d },
+      );
+  }
+}
+async function copyNForward(
+  _0x2e666a,
+  _0x278598,
+  _0x4ace34 = ![],
+  _0x3fe3b8 = {},
+) {
+  const _0x453399 = _0x5d8d31;
+  let _0x37c048;
+  _0x3fe3b8[_0x453399(0x20b)] &&
+    ((_0x278598[_0x453399(0x19c)] =
+      _0x278598[_0x453399(0x19c)] &&
+      _0x278598[_0x453399(0x19c)][_0x453399(0x184)] &&
+      _0x278598[_0x453399(0x19c)][_0x453399(0x184)][_0x453399(0x19c)]
+        ? _0x278598[_0x453399(0x19c)]["ephemeralMessage"][_0x453399(0x19c)]
+        : _0x278598["message"] || undefined),
+    (_0x37c048 = Object[_0x453399(0x211)](
+      _0x278598[_0x453399(0x19c)][_0x453399(0x17d)]["message"],
+    )[0x0]),
+    delete (_0x278598[_0x453399(0x19c)] && _0x278598[_0x453399(0x19c)]["ignore"]
+      ? _0x278598[_0x453399(0x19c)][_0x453399(0x1a4)]
+      : _0x278598[_0x453399(0x19c)] || undefined),
+    delete _0x278598[_0x453399(0x19c)][_0x453399(0x17d)][_0x453399(0x19c)][
+      _0x37c048
+    ][_0x453399(0x1ea)],
+    (_0x278598[_0x453399(0x19c)] = {
+      ..._0x278598["message"][_0x453399(0x17d)]["message"],
+    }));
+  let _0x374b71 = Object[_0x453399(0x211)](_0x278598[_0x453399(0x19c)])[0x0],
+    _0x2cdd2f = await generateForwardMessageContent(_0x278598, _0x4ace34),
+    _0x5c3769 = Object[_0x453399(0x211)](_0x2cdd2f)[0x0],
+    _0x3bc818 = {};
+  if (_0x374b71 != _0x453399(0x17a))
+    _0x3bc818 = _0x278598[_0x453399(0x19c)][_0x374b71]["contextInfo"];
+  _0x2cdd2f[_0x5c3769]["contextInfo"] = {
+    ..._0x3bc818,
+    ..._0x2cdd2f[_0x5c3769][_0x453399(0x204)],
+  };
+  const _0x59264e = await generateWAMessageFromContent(
+    _0x2e666a,
+    _0x2cdd2f,
+    _0x3fe3b8
+      ? {
+          ..._0x2cdd2f[_0x5c3769],
+          ..._0x3fe3b8,
+          ...(_0x3fe3b8[_0x453399(0x204)]
+            ? {
+                contextInfo: {
+                  ..._0x2cdd2f[_0x5c3769][_0x453399(0x204)],
+                  ..._0x3fe3b8["contextInfo"],
+                },
+              }
+            : {}),
+        }
+      : {},
+  );
+  return (
+    await client[_0x453399(0x1de)](_0x2e666a, _0x59264e["message"], {
+      messageId: _0x59264e["key"]["id"],
+    }),
+    _0x59264e
+  );
+}
+const decodeJid = (_0x2f18f7) => {
+    const _0x4e40f8 = _0x5d8d31;
+    if (!_0x2f18f7) return _0x2f18f7;
+    if (/:\d+@/gi[_0x4e40f8(0x179)](_0x2f18f7)) {
+      const _0x974f04 = jidDecode(_0x2f18f7) || {};
+      return _0x974f04[_0x4e40f8(0x1d8)] && _0x974f04[_0x4e40f8(0x186)]
+        ? _0x974f04["user"] + "@" + _0x974f04[_0x4e40f8(0x186)]
+        : _0x2f18f7;
+    }
+    return _0x2f18f7;
+  },
+  getName = async (_0x34f937) => {
+    const _0x4b8120 = _0x5d8d31,
+      _0x59b7aa = await decodeJid(_0x34f937);
+    let _0x1fc2ef = await Users[_0x4b8120(0x1c5)](_0x59b7aa),
+      _0x55d5d1 = await groupManage[_0x4b8120(0x1c5)](_0x59b7aa);
+    if (_0x1fc2ef && _0x1fc2ef[_0x4b8120(0x1be)])
+      return _0x1fc2ef[_0x4b8120(0x1be)];
+    if (_0x59b7aa[_0x4b8120(0x1c1)]("@g.us")) {
+      if (_0x55d5d1 && _0x55d5d1[_0x4b8120(0x189)])
+        return _0x55d5d1["groupName"];
+      else {
+        const _0x22b470 = await client[_0x4b8120(0x16e)](_0x59b7aa)[
+          _0x4b8120(0x1e6)
+        ](() => ({}));
+        return _0x22b470[_0x4b8120(0x1c0)] || _0x59b7aa;
+      }
+    } else {
+      if (_0x59b7aa === _0x4b8120(0x1a8)) return "WhatsApp";
+      else {
+        if (
+          _0x59b7aa === client[_0x4b8120(0x1a2)](client[_0x4b8120(0x1d8)]["id"])
+        )
+          return client["user"]["name"];
+        else {
+          try {
+            const _0x8b5ac0 = (
+              await axios[_0x4b8120(0x1c5)](
+                config[_0x4b8120(0x1b5)] + "/tools/country?text=" + _0x59b7aa,
+              )
+            )[_0x4b8120(0x1bd)];
+            return _0x8b5ac0?.["result"]?.[_0x4b8120(0x1af)] || "No disponible";
+          } catch (_0x138e91) {
+            return "No disponible";
+          }
+        }
+      }
+    }
+  },
+  reSizeImg = async (_0xae7797, _0x1ccfaf, _0x362247) => {
+    const _0x431afb = _0x5d8d31;
+    let _0x5756b6 = require(_0x431afb(0x1e3));
+    var _0x328242 = await _0x5756b6[_0x431afb(0x181)](_0xae7797),
+      _0x322de0 = await _0x328242[_0x431afb(0x1b8)](_0x1ccfaf, _0x362247)[
+        _0x431afb(0x1e7)
+      ](_0x5756b6["MIME_PNG"]);
+    return _0x322de0;
+  },
+  generateMessageIDV2 = (_0xf296ea) => {
+    const _0xfc0708 = _0x5d8d31,
+      _0x5b68c3 = Buffer[_0xfc0708(0x1cf)](0x8 + 0x14 + 0x10);
+    _0x5b68c3[_0xfc0708(0x198)](
+      BigInt(Math[_0xfc0708(0x183)](Date[_0xfc0708(0x178)]() / 0x3e8)),
+    );
+    if (_0xf296ea) {
+      const _0x7b25a9 = _0xf296ea;
+      (_0x7b25a9 === null || _0x7b25a9 === void 0x0
+        ? void 0x0
+        : _0x7b25a9[_0xfc0708(0x1d8)]) &&
+        (_0x5b68c3["write"](_0x7b25a9[_0xfc0708(0x1d8)], 0x8),
+        _0x5b68c3[_0xfc0708(0x1d2)](
+          "@c.us",
+          0x8 + _0x7b25a9[_0xfc0708(0x1d8)][_0xfc0708(0x1fc)],
+        ));
+    }
+    const _0x5c75ba = require(_0xfc0708(0x20f))["randomBytes"](0x14);
+    _0x5c75ba[_0xfc0708(0x185)](_0x5b68c3, 0x1c);
+    const _0x26ebc6 = Buffer["from"](_0xfc0708(0x18c), _0xfc0708(0x169))[
+        _0xfc0708(0x1e8)
+      ](_0xfc0708(0x175)),
+      _0x57ad21 = require(_0xfc0708(0x20f))
+        [_0xfc0708(0x19a)](_0xfc0708(0x1dd))
+        ["update"](_0x5b68c3)
+        [_0xfc0708(0x16f)]();
+    return (
+      _0x26ebc6 +
+      _0x57ad21[_0xfc0708(0x1e8)](_0xfc0708(0x168))
+        [_0xfc0708(0x20e)]()
+        ["substring"](0x0, 0x7)
+    );
+  };
+async function generate(_0x29d419) {
+  const _0x191c06 = _0x5d8d31,
+    _0x2ae800 = require(_0x191c06(0x1e3)),
+    _0x5981ad = await _0x2ae800[_0x191c06(0x181)](_0x29d419),
+    _0x51b684 = _0x5981ad[_0x191c06(0x1bb)](),
+    _0x20ed87 = _0x5981ad["getHeight"](),
+    _0x2fed2d = _0x5981ad["crop"](0x0, 0x0, _0x51b684, _0x20ed87);
+  return {
+    img: await _0x2fed2d[_0x191c06(0x210)](0x2d0, 0x2d0)[_0x191c06(0x1e7)](
+      _0x2ae800[_0x191c06(0x17e)],
+    ),
+    preview: await _0x2fed2d[_0x191c06(0x1fd)]()[_0x191c06(0x1e7)](
+      _0x2ae800[_0x191c06(0x17e)],
+    ),
+  };
+}
+function _0x953d() {
+  const _0x35aafd = [
+    "normalize",
+    "stats",
+    "imageMessage",
+    "documentMessage",
+    "buffer",
+    "set",
+    "query",
+    "contextInfo",
+    "image/gif",
+    "Invitation\x20to\x20join\x20my\x20WhatsApp\x20group",
+    "description",
+    "cMod",
+    "string",
+    "unlinkSync",
+    "readViewOnce",
+    "ORG:;\x0a",
+    "invite",
+    "toUpperCase",
+    "crypto",
+    "scaleToFit",
+    "keys",
+    "inviteInfo",
+    "WebMessageInfo",
+    "documentWithCaptionMessage",
+    "react",
+    "fakeObj",
+    "viewOnceMessage",
+    "isGroup",
+    "hex",
+    "base64",
+    "FN:",
+    "sendMessage",
+    "participant",
+    "sendPresenceUpdate",
+    "groupMetadata",
+    "digest",
+    "sender",
+    "fromObject",
+    "axios",
+    "setStatus",
+    "content",
+    "utf-8",
+    "creation",
+    "getQuotedObj",
+    "now",
+    "test",
+    "conversation",
+    "reply",
+    "1042500qnSDPA",
+    "viewOnceMessageV2",
+    "MIME_JPEG",
+    "@g.us",
+    "quotedMsg",
+    "read",
+    "messageContextInfo",
+    "floor",
+    "ephemeralMessage",
+    "copy",
+    "server",
+    "document",
+    "DELI",
+    "groupName",
+    "sendFileFromUrl",
+    "selectedButtonId",
+    "REVMSVJJVVMt",
+    "log",
+    "status",
+    "reactionMessage",
+    "audioMessage",
+    "group",
+    "6619257FmeKMR",
+    "from",
+    "format",
+    "templateButtonReplyMessage",
+    "replace",
+    "audio",
+    "writeBigUInt64BE",
+    "caption",
+    "createHash",
+    "attrs",
+    "message",
+    "singleSelectReply",
+    "6LklcgF",
+    "selectedId",
+    "picture",
+    "video",
+    "decodeJid",
+    "isBot",
+    "ignore",
+    "@s.whatsapp.net",
+    "find",
+    "key",
+    "0@s.whatsapp.net",
+    "sendFile",
+    "productMessage",
+    "senderKeyDistributionMessage",
+    "./index",
+    "viewOnceMessageV2Extension",
+    "4208939Fopwiv",
+    "number",
+    "videoMessage",
+    "type",
+    "extendedTextMessage",
+    "TEL;type=CELL;type=VOICE;waid=",
+    "composing",
+    "BASE_URL",
+    "sticker",
+    "filesize",
+    "resize",
+    "8hJPJdH",
+    "isBuffer",
+    "getWidth",
+    "generateMessageIDV2",
+    "data",
+    "name",
+    "editedMessage",
+    "subject",
+    "endsWith",
+    "8850760pTxWCA",
+    "listResponseMessage",
+    "download",
+    "get",
+    "recording",
+    "mentionedJid",
+    "text",
+    "../db",
+    "quotedMessage",
+    "waUploadToServer",
+    "stanzaId",
+    "image",
+    "END:VCARD",
+    "alloc",
+    "mtype",
+    "remoteJid",
+    "write",
+    "1825484VUNBvH",
+    "downloadMediaMessage",
+    "msg",
+    "updateProfile",
+    "fromMe",
+    "user",
+    "buttonsResponseMessage",
+    "then",
+    "w:profile:picture",
+    "body",
+    "sha256",
+    "relayMessage",
+    "split",
+    "Serialize",
+    "2193375nUsjtl",
+    "copyNForward",
+    "jimp",
+    "quoted",
+    "startsWith",
+    "catch",
+    "getBufferAsync",
+    "toString",
+    "mentions",
+    "viewOnce",
+    "creator",
+    "w:g2",
+    "reSizeImg",
+    "includes",
+    "delete",
+    "330792VLEnwr",
+    "Message",
+    "presenceSubscribe",
+    "device",
+    "sendListM",
+    "mimetype",
+    "unknown\x20subject",
+    "5xGRsBB",
+    "./config.json",
+    "statSync",
+    "chat",
+    "selectedRowId",
+    "length",
+  ];
+  _0x953d = function () {
+    return _0x35aafd;
+  };
+  return _0x953d();
+}
+async function updateProfile(_0x2ed1c5, _0x5c65b2) {
+  const _0x1413f1 = _0x5d8d31;
+  var { img: _0x13e9fe } = await generate(_0x5c65b2);
+  const _0x14a8c7 = {
+    target: _0x2ed1c5,
+    to: S_WHATSAPP_NET,
+    type: _0x1413f1(0x202),
+    xmlns: _0x1413f1(0x1db),
+  };
+  await client["query"]({
+    tag: "iq",
+    attrs: _0x14a8c7,
+    content: [
+      { tag: _0x1413f1(0x1a0), attrs: { type: "image" }, content: _0x13e9fe },
+    ],
+  });
+}
+exports["Serialize"] = (_0xd11cf4, _0x1a5c5e) => {
+  const _0x464f9b = _0x5d8d31;
+  (_0xd11cf4[_0x464f9b(0x1d6)] = updateProfile),
+    (_0xd11cf4[_0x464f9b(0x1bc)] = generateMessageIDV2),
+    (_0xd11cf4["getName"] = getName),
+    (_0xd11cf4[_0x464f9b(0x1ed)] = reSizeImg),
+    (_0xd11cf4[_0x464f9b(0x1a2)] = decodeJid),
+    (_0xd11cf4[_0x464f9b(0x173)] = setStatus),
+    (_0xd11cf4[_0x464f9b(0x1d4)] = downloadMediaMessage),
+    (_0xd11cf4["cMod"] = cMod),
+    (_0xd11cf4["copyNForward"] = copyNForward),
+    (_0xd11cf4[_0x464f9b(0x1a9)] = sendFile),
+    (_0xd11cf4["sendGroupV4Invite"] = sendGroupV4Invite),
+    (_0xd11cf4[_0x464f9b(0x1f4)] = sendListM),
+    (_0xd11cf4["sendContact"] = sendContact),
+    (_0xd11cf4[_0x464f9b(0x18a)] = sendFileFromUrl),
+    (_0xd11cf4[_0x464f9b(0x212)] = inviteInfo);
+  if (!_0x1a5c5e) return _0x1a5c5e;
+  let _0x1f15cb = proto[_0x464f9b(0x213)];
+  _0x1a5c5e["key"] &&
+    ((_0x1a5c5e["id"] = _0x1a5c5e[_0x464f9b(0x1a7)]["id"]),
+    (_0x1a5c5e[_0x464f9b(0x1a3)] =
+      _0x1a5c5e["id"]["startsWith"](_0x464f9b(0x188)) &&
+      _0x1a5c5e["id"][_0x464f9b(0x1fc)] === 0x10),
+    (_0x1a5c5e[_0x464f9b(0x1fa)] =
+      _0x1a5c5e[_0x464f9b(0x1a7)][_0x464f9b(0x1d1)]),
+    (_0x1a5c5e[_0x464f9b(0x1d7)] = _0x1a5c5e["key"][_0x464f9b(0x1d7)]),
+    (_0x1a5c5e[_0x464f9b(0x167)] = _0x1a5c5e[_0x464f9b(0x1fa)][
+      _0x464f9b(0x1c1)
+    ](_0x464f9b(0x17f))),
+    (_0x1a5c5e["sender"] = _0x1a5c5e[_0x464f9b(0x1d7)]
+      ? jidNormalizedUser(_0xd11cf4[_0x464f9b(0x1d8)]["id"]) || ""
+      : isJidGroup(_0x1a5c5e[_0x464f9b(0x1a7)]["remoteJid"])
+        ? jidNormalizedUser(_0x1a5c5e[_0x464f9b(0x1a7)][_0x464f9b(0x16c)])
+        : isJidBroadcast(_0x1a5c5e["key"]["remoteJid"])
+          ? jidNormalizedUser(_0x1a5c5e[_0x464f9b(0x1a7)][_0x464f9b(0x16c)])
+          : jidNormalizedUser(_0x1a5c5e[_0x464f9b(0x1a7)][_0x464f9b(0x1d1)])),
+    (_0x1a5c5e[_0x464f9b(0x1f3)] = getDevice(_0x1a5c5e["id"])),
+    (_0x1a5c5e["senderPn"] = _0x1a5c5e["key"]["senderPn"]),
+    (_0x1a5c5e["senderLid"] = _0x1a5c5e["key"]["senderLid"]),
+    (_0x1a5c5e["participantPn"] = _0x1a5c5e["key"]["participantPn"]),
+    (_0x1a5c5e["participantLid"] = _0x1a5c5e["key"]["participantLid"]),
+    (_0x1a5c5e[_0x464f9b(0x1a7)] = {
+      remoteJid: _0x1a5c5e[_0x464f9b(0x1fa)],
+      fromMe: _0x1a5c5e[_0x464f9b(0x1d7)],
+      id: _0x1a5c5e["id"],
+      participant: _0x1a5c5e["sender"],
+    }));
+  _0x1a5c5e[_0x464f9b(0x19c)] = _0x1a5c5e[_0x464f9b(0x19c)]?.[_0x464f9b(0x166)]
+    ? _0x1a5c5e["message"][_0x464f9b(0x166)]?.[_0x464f9b(0x19c)]
+    : _0x1a5c5e["message"]?.[_0x464f9b(0x184)]
+      ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x184)]?.[_0x464f9b(0x19c)]
+      : _0x1a5c5e[_0x464f9b(0x19c)]?.[_0x464f9b(0x214)]
+        ? _0x1a5c5e["message"]["documentWithCaptionMessage"]?.["message"]
+        : _0x1a5c5e[_0x464f9b(0x19c)]?.[_0x464f9b(0x17d)]
+          ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x17d)]?.[_0x464f9b(0x19c)]
+          : _0x1a5c5e[_0x464f9b(0x19c)]?.[_0x464f9b(0x1bf)]
+            ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x1bf)]?.[_0x464f9b(0x19c)]
+            : _0x1a5c5e[_0x464f9b(0x19c)]?.[_0x464f9b(0x1ad)]
+              ? _0x1a5c5e["message"][_0x464f9b(0x1ad)]?.[_0x464f9b(0x19c)]
+              : _0x1a5c5e[_0x464f9b(0x19c)];
+  if (_0x1a5c5e[_0x464f9b(0x19c)]) {
+    (_0x1a5c5e[_0x464f9b(0x1d0)] = Object[_0x464f9b(0x211)](
+      _0x1a5c5e["message"],
+    )[_0x464f9b(0x1a6)](
+      (_0x1a6286) =>
+        _0x1a6286 !== _0x464f9b(0x1ab) && _0x1a6286 !== _0x464f9b(0x182),
+    )),
+      (_0x1a5c5e[_0x464f9b(0x1ea)] =
+        !!_0x1a5c5e[_0x464f9b(0x19c)]?.[_0x464f9b(0x166)] ||
+        !!_0x1a5c5e["message"]?.["viewOnceMessageV2"] ||
+        !!_0x1a5c5e["message"]?.[_0x464f9b(0x1ad)]),
+      (_0x1a5c5e[_0x464f9b(0x1fe)] = _0x1a5c5e[_0x464f9b(0x18e)] || 0x0),
+      (_0x1a5c5e[_0x464f9b(0x1d5)] =
+        _0x1a5c5e["mtype"] === _0x464f9b(0x17d)
+          ? _0x1a5c5e["message"][_0x1a5c5e[_0x464f9b(0x1d0)]][_0x464f9b(0x19c)][
+              getContentType(
+                _0x1a5c5e["message"][_0x1a5c5e["mtype"]]["message"],
+              )
+            ]
+          : _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e["mtype"]]),
+      (_0x1a5c5e[_0x464f9b(0x1dc)] =
+        _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x17a)] &&
+        _0x1a5c5e[_0x464f9b(0x1d0)] === _0x464f9b(0x17a)
+          ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x17a)]
+          : _0x1a5c5e[_0x464f9b(0x19c)]["extendedTextMessage"] &&
+              _0x1a5c5e["mtype"] === _0x464f9b(0x1b2)
+            ? _0x1a5c5e["message"][_0x464f9b(0x1b2)][_0x464f9b(0x1c8)]
+            : _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x1ff)] &&
+                _0x1a5c5e[_0x464f9b(0x1d0)] === _0x464f9b(0x1ff)
+              ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x1ff)][_0x464f9b(0x199)]
+              : _0x1a5c5e[_0x464f9b(0x19c)]["videoMessage"] &&
+                  _0x1a5c5e[_0x464f9b(0x1d0)] === _0x464f9b(0x1b0)
+                ? _0x1a5c5e["message"]["videoMessage"][_0x464f9b(0x199)]
+                : _0x1a5c5e["message"]["documentMessage"] &&
+                    _0x1a5c5e[_0x464f9b(0x1d0)] === _0x464f9b(0x200)
+                  ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x200)]["caption"]
+                  : _0x1a5c5e["message"][_0x464f9b(0x1d9)] &&
+                      _0x1a5c5e[_0x464f9b(0x1d0)] === _0x464f9b(0x1d9)
+                    ? _0x1a5c5e["message"][_0x464f9b(0x1d9)]["selectedButtonId"]
+                    : _0x1a5c5e["message"][_0x464f9b(0x1c3)] &&
+                        _0x1a5c5e[_0x464f9b(0x1d0)] === _0x464f9b(0x1c3)
+                      ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x1c3)][
+                          _0x464f9b(0x19d)
+                        ]["selectedRowId"]
+                      : _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x195)] &&
+                          _0x1a5c5e[_0x464f9b(0x1d0)] ===
+                            "templateButtonReplyMessage"
+                        ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x195)][
+                            _0x464f9b(0x19f)
+                          ]
+                        : _0x1a5c5e[_0x464f9b(0x19c)]["reactionMessage"] &&
+                            _0x1a5c5e[_0x464f9b(0x1d0)] === "reactionMessage"
+                          ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x18f)][
+                              "text"
+                            ]
+                          : "");
+    if (!_0x1a5c5e["msg"]) return;
+    _0x1a5c5e[_0x464f9b(0x1d0)] === _0x464f9b(0x184) &&
+      (this[_0x464f9b(0x1e0)](_0xd11cf4, _0x1a5c5e[_0x464f9b(0x1d5)]),
+      (_0x1a5c5e[_0x464f9b(0x1d0)] = _0x1a5c5e["msg"]["mtype"]),
+      (_0x1a5c5e["msg"] = _0x1a5c5e[_0x464f9b(0x1d5)]["msg"]));
+    let _0x51c8e5 = (_0x1a5c5e[_0x464f9b(0x1e4)] = _0x1a5c5e[_0x464f9b(0x1d5)][
+      _0x464f9b(0x204)
+    ]
+      ? _0x1a5c5e[_0x464f9b(0x1d5)]["contextInfo"][_0x464f9b(0x1ca)]
+      : null);
+    (_0x1a5c5e["mentionedJid"] = _0x1a5c5e["msg"][_0x464f9b(0x204)]
+      ? _0x1a5c5e[_0x464f9b(0x1d5)]["contextInfo"][_0x464f9b(0x1c7)]
+      : []),
+      (_0x1a5c5e[_0x464f9b(0x1e4)] = _0x1a5c5e["message"][
+        _0x1a5c5e[_0x464f9b(0x1d0)]
+      ]?.[_0x464f9b(0x204)]?.[_0x464f9b(0x1ca)]
+        ? _0x1a5c5e["message"][_0x1a5c5e[_0x464f9b(0x1d0)]]["contextInfo"][
+            _0x464f9b(0x1ca)
+          ]["viewOnceMessage"]
+          ? _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e["mtype"]][_0x464f9b(0x204)][
+              _0x464f9b(0x1ca)
+            ]["viewOnceMessage"]?.[_0x464f9b(0x19c)]
+          : _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e[_0x464f9b(0x1d0)]][
+                _0x464f9b(0x204)
+              ]["quotedMessage"]?.[_0x464f9b(0x184)]
+            ? _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e[_0x464f9b(0x1d0)]][
+                _0x464f9b(0x204)
+              ]["quotedMessage"]["ephemeralMessage"]?.[_0x464f9b(0x19c)]
+            : _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e["mtype"]][_0x464f9b(0x204)][
+                  "quotedMessage"
+                ]?.["documentWithCaptionMessage"]
+              ? _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e["mtype"]][
+                  _0x464f9b(0x204)
+                ]["quotedMessage"][_0x464f9b(0x214)]?.[_0x464f9b(0x19c)]
+              : _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e["mtype"]]["contextInfo"][
+                    "quotedMessage"
+                  ]?.[_0x464f9b(0x17d)]
+                ? _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e[_0x464f9b(0x1d0)]][
+                    _0x464f9b(0x204)
+                  ][_0x464f9b(0x1ca)]["viewOnceMessageV2"]?.["message"]
+                : _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e[_0x464f9b(0x1d0)]][
+                      _0x464f9b(0x204)
+                    ][_0x464f9b(0x1ca)]?.[_0x464f9b(0x1bf)]
+                  ? _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e["mtype"]][
+                      "contextInfo"
+                    ][_0x464f9b(0x1ca)][_0x464f9b(0x1bf)]?.["message"]
+                  : _0x1a5c5e["message"][_0x1a5c5e[_0x464f9b(0x1d0)]][
+                        _0x464f9b(0x204)
+                      ]["quotedMessage"]?.[_0x464f9b(0x1ad)]
+                    ? _0x1a5c5e["message"][_0x1a5c5e["mtype"]][
+                        _0x464f9b(0x204)
+                      ][_0x464f9b(0x1ca)][_0x464f9b(0x1ad)]?.[_0x464f9b(0x19c)]
+                    : _0x1a5c5e[_0x464f9b(0x19c)][_0x1a5c5e["mtype"]][
+                        "contextInfo"
+                      ][_0x464f9b(0x1ca)]
+        : null);
+    if (_0x1a5c5e["quoted"]) {
+      let _0x3f93cb = Object[_0x464f9b(0x211)](_0x1a5c5e[_0x464f9b(0x1e4)])[
+        _0x464f9b(0x1a6)
+      ](
+        (_0x415c88) =>
+          _0x415c88 !== _0x464f9b(0x1ab) && _0x415c88 !== _0x464f9b(0x182),
+      );
+      (_0x1a5c5e[_0x464f9b(0x1e4)] = _0x1a5c5e[_0x464f9b(0x1e4)][_0x3f93cb]),
+        (_0x1a5c5e["quoted"][_0x464f9b(0x1dc)] =
+          _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x17a)] &&
+          _0x1a5c5e["quoted"]["type"] === _0x464f9b(0x17a)
+            ? _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x17a)]
+            : _0x1a5c5e["quoted"][_0x464f9b(0x1b2)] &&
+                _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1b1)] ===
+                  _0x464f9b(0x1b2)
+              ? _0x1a5c5e[_0x464f9b(0x1e4)]["extendedTextMessage"]["text"]
+              : _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1ff)] &&
+                  _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1b1)] ===
+                    _0x464f9b(0x1ff)
+                ? _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1ff)][
+                    _0x464f9b(0x199)
+                  ]
+                : _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1b0)] &&
+                    _0x1a5c5e[_0x464f9b(0x1e4)]["type"] === _0x464f9b(0x1b0)
+                  ? _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1b0)]["caption"]
+                  : _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x200)] &&
+                      _0x1a5c5e[_0x464f9b(0x1e4)]["type"] === _0x464f9b(0x200)
+                    ? _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x200)][
+                        _0x464f9b(0x199)
+                      ]
+                    : _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1d9)] &&
+                        _0x1a5c5e["quoted"][_0x464f9b(0x1b1)] ===
+                          "buttonsResponseMessage"
+                      ? _0x1a5c5e["quoted"][_0x464f9b(0x1d9)][
+                          "selectedButtonId"
+                        ]
+                      : _0x1a5c5e[_0x464f9b(0x1e4)]["listResponseMessage"] &&
+                          _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1b1)] ===
+                            _0x464f9b(0x1c3)
+                        ? _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1c3)][
+                            _0x464f9b(0x19d)
+                          ]["selectedRowId"]
+                        : _0x1a5c5e[_0x464f9b(0x1e4)][
+                              "templateButtonReplyMessage"
+                            ] &&
+                            _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1b1)] ===
+                              "templateButtonReplyMessage"
+                          ? _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x195)][
+                              _0x464f9b(0x19f)
+                            ]
+                          : _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x18f)] &&
+                              _0x1a5c5e["quoted"][_0x464f9b(0x1b1)] ===
+                                "reactionMessage"
+                            ? _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x18f)][
+                                _0x464f9b(0x1c8)
+                              ]
+                            : "");
+      [_0x464f9b(0x1aa)][_0x464f9b(0x1ee)](_0x3f93cb) &&
+        ((_0x3f93cb = Object["keys"](_0x1a5c5e[_0x464f9b(0x1e4)])[0x0]),
+        (_0x1a5c5e[_0x464f9b(0x1e4)] = _0x1a5c5e[_0x464f9b(0x1e4)][_0x3f93cb]));
+      if (typeof _0x1a5c5e["quoted"] === _0x464f9b(0x209))
+        _0x1a5c5e["quoted"] = { text: _0x1a5c5e[_0x464f9b(0x1e4)] };
+      (_0x1a5c5e[_0x464f9b(0x1e4)]["mtype"] = _0x3f93cb),
+        (_0x1a5c5e["quoted"]["id"] =
+          _0x1a5c5e[_0x464f9b(0x1d5)][_0x464f9b(0x204)][_0x464f9b(0x1cc)]),
+        (_0x1a5c5e["quoted"][_0x464f9b(0x1fa)] =
+          _0x1a5c5e[_0x464f9b(0x1d5)][_0x464f9b(0x204)][_0x464f9b(0x1d1)] ||
+          _0x1a5c5e[_0x464f9b(0x1fa)]),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1a3)] = _0x1a5c5e[
+          _0x464f9b(0x1e4)
+        ]["id"]
+          ? _0x1a5c5e[_0x464f9b(0x1e4)]["id"][_0x464f9b(0x1e5)]("DELI") &&
+            _0x1a5c5e["quoted"]["id"][_0x464f9b(0x1fc)] === 0x10
+          : ![]),
+        (_0x1a5c5e["quoted"][_0x464f9b(0x170)] =
+          _0x1a5c5e[_0x464f9b(0x1d5)]["contextInfo"][_0x464f9b(0x16c)][
+            _0x464f9b(0x1df)
+          ](":")[0x0] ||
+          _0x1a5c5e[_0x464f9b(0x1d5)]["contextInfo"][_0x464f9b(0x16c)]),
+        (_0x1a5c5e["quoted"]["fromMe"] = areJidsSameUser(
+          _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x170)],
+          _0xd11cf4[_0x464f9b(0x1d8)] && _0xd11cf4[_0x464f9b(0x1d8)]["id"],
+        )),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1c8)] =
+          _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1c8)] ||
+          _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x199)] ||
+          ""),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1f3)] = getDevice(
+          _0x1a5c5e[_0x464f9b(0x1e4)]["id"],
+        )),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1a7)] = {
+          remoteJid: _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1fa)],
+          fromMe: _0x1a5c5e["quoted"][_0x464f9b(0x1d7)],
+          id: _0x1a5c5e[_0x464f9b(0x1e4)]["id"],
+          participant: _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x170)],
+        }),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1c7)] = _0x1a5c5e[
+          _0x464f9b(0x1d5)
+        ]["contextInfo"]
+          ? _0x1a5c5e[_0x464f9b(0x1d5)][_0x464f9b(0x204)][_0x464f9b(0x1c7)]
+          : []);
+      let _0x39a125 = (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x216)] =
+        _0x1f15cb[_0x464f9b(0x171)]({
+          key: {
+            remoteJid: _0x1a5c5e["quoted"][_0x464f9b(0x1fa)],
+            fromMe: _0x1a5c5e[_0x464f9b(0x1e4)]["fromMe"],
+            id: _0x1a5c5e["quoted"]["id"],
+            participant: _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x170)],
+          },
+          message: _0x51c8e5,
+          ...(_0x1a5c5e[_0x464f9b(0x167)]
+            ? { participant: _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x170)] }
+            : {}),
+        }));
+      (_0x1a5c5e[_0x464f9b(0x180)] = _0x1a5c5e[_0x464f9b(0x177)] =
+        () => _0x39a125),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1ef)] = () =>
+          _0xd11cf4[_0x464f9b(0x16b)](
+            _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1fa)],
+            { delete: _0x39a125[_0x464f9b(0x1a7)] },
+          )),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1e2)] = (
+          _0x16fe49,
+          _0x32f845 = ![],
+          _0x44c300 = {},
+        ) =>
+          _0xd11cf4[_0x464f9b(0x1e2)](
+            _0x16fe49,
+            _0x39a125,
+            _0x32f845,
+            _0x44c300,
+          )),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x1c4)] = () =>
+          _0xd11cf4[_0x464f9b(0x1d4)](_0x1a5c5e[_0x464f9b(0x1e4)])),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x208)] = (
+          _0x43df6c,
+          _0x27ccae = "",
+          _0x31e4d6 = _0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x170)],
+          _0x337760 = {},
+        ) =>
+          _0xd11cf4[_0x464f9b(0x208)](
+            _0x43df6c,
+            _0x39a125,
+            _0x27ccae,
+            _0x31e4d6,
+            _0x337760,
+          )),
+        (_0x1a5c5e[_0x464f9b(0x1e4)][_0x464f9b(0x215)] = (_0x5a14e1) =>
+          _0xd11cf4[_0x464f9b(0x16b)](_0x1a5c5e[_0x464f9b(0x1fa)], {
+            react: { text: _0x5a14e1, key: _0x1a5c5e[_0x464f9b(0x1e4)]["key"] },
+          }));
+    }
+  }
+  if (_0x1a5c5e[_0x464f9b(0x1d5)]["url"])
+    _0x1a5c5e[_0x464f9b(0x1c4)] = () =>
+      _0xd11cf4[_0x464f9b(0x1d4)](_0x1a5c5e[_0x464f9b(0x1d5)]);
+  return (
+    (_0x1a5c5e[_0x464f9b(0x1c8)] =
+      (_0x1a5c5e[_0x464f9b(0x1d0)] == _0x464f9b(0x1c3)
+        ? _0x1a5c5e["msg"]["singleSelectReply"][_0x464f9b(0x1fb)]
+        : "") ||
+      _0x1a5c5e[_0x464f9b(0x1d5)][_0x464f9b(0x1c8)] ||
+      _0x1a5c5e[_0x464f9b(0x1d5)][_0x464f9b(0x199)] ||
+      _0x1a5c5e[_0x464f9b(0x1d5)] ||
+      ""),
+    (_0x1a5c5e["body"] =
+      _0x1a5c5e[_0x464f9b(0x1d0)] === _0x464f9b(0x17a)
+        ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x17a)]
+        : _0x1a5c5e[_0x464f9b(0x1d0)] == _0x464f9b(0x1ff)
+          ? _0x1a5c5e["message"][_0x464f9b(0x1ff)][_0x464f9b(0x199)]
+          : _0x1a5c5e[_0x464f9b(0x1d0)] == _0x464f9b(0x1b0)
+            ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x1b0)][_0x464f9b(0x199)]
+            : _0x1a5c5e["mtype"] == _0x464f9b(0x1b2)
+              ? _0x1a5c5e[_0x464f9b(0x19c)]["extendedTextMessage"][
+                  _0x464f9b(0x1c8)
+                ]
+              : _0x1a5c5e[_0x464f9b(0x1d0)] == _0x464f9b(0x1d9)
+                ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x1d9)][
+                    _0x464f9b(0x18b)
+                  ]
+                : _0x1a5c5e[_0x464f9b(0x1d0)] == _0x464f9b(0x1c3)
+                  ? _0x1a5c5e[_0x464f9b(0x19c)]["listResponseMessage"][
+                      _0x464f9b(0x19d)
+                    ]["selectedRowId"]
+                  : _0x1a5c5e[_0x464f9b(0x1d0)] == _0x464f9b(0x195)
+                    ? _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x195)][
+                        _0x464f9b(0x19f)
+                      ]
+                    : _0x1a5c5e[_0x464f9b(0x1d0)] === _0x464f9b(0x182)
+                      ? _0x1a5c5e[_0x464f9b(0x19c)]["listResponseMessage"][
+                          "singleSelectReply"
+                        ]["selectedRowId"] ||
+                        _0x1a5c5e[_0x464f9b(0x19c)][_0x464f9b(0x1d9)][
+                          _0x464f9b(0x18b)
+                        ] ||
+                        _0x1a5c5e[_0x464f9b(0x1c8)]
+                      : ""),
+    (_0x1a5c5e[_0x464f9b(0x17b)] = async (
+      _0x4b7a9c,
+      _0x58e41f = _0x1a5c5e["chat"],
+      _0x402c18,
+    ) => {
+      const _0x323b65 = _0x464f9b;
+      config["composing"] &&
+        (await _0xd11cf4[_0x323b65(0x1f2)](_0x58e41f),
+        await _0xd11cf4[_0x323b65(0x16d)](_0x323b65(0x1b4), _0x58e41f)),
+        await _0xd11cf4[_0x323b65(0x16b)](
+          _0x58e41f,
+          { text: _0x4b7a9c, ..._0x402c18 },
+          {
+            quoted: _0x1a5c5e,
+            messageId: await generateMessageIDV2(_0x1a5c5e[_0x323b65(0x170)]),
+            ..._0x402c18,
+          },
+        );
+    }),
+    (_0x1a5c5e["copy"] = () =>
+      exports["Serialize"](
+        _0xd11cf4,
+        _0x1f15cb[_0x464f9b(0x171)](_0x1f15cb["toObject"](_0x1a5c5e)),
+      )),
+    (_0x1a5c5e[_0x464f9b(0x1e2)] = (
+      _0x120671 = _0x1a5c5e[_0x464f9b(0x1fa)],
+      _0x538b73 = ![],
+      _0x597450 = {},
+    ) =>
+      _0xd11cf4[_0x464f9b(0x1e2)](_0x120671, _0x1a5c5e, _0x538b73, _0x597450)),
+    (_0x1a5c5e[_0x464f9b(0x208)] = (
+      _0x48a49f,
+      _0x4a7ed9 = "",
+      _0x368f49 = _0x1a5c5e[_0x464f9b(0x170)],
+      _0x57c2f0 = {},
+    ) =>
+      _0xd11cf4[_0x464f9b(0x208)](
+        _0x48a49f,
+        _0x1a5c5e,
+        _0x4a7ed9,
+        _0x368f49,
+        _0x57c2f0,
+      )),
+    _0x1a5c5e
+  );
+};

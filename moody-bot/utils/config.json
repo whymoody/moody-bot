@@ -1,0 +1,38 @@
+{
+  "owner": [
+    "5219612255258@s.whatsapp.net"
+    
+  ],
+  "autoPost": false,
+  "autoRead": false,
+  "composing": false,
+  "session_id": "50524527805%3ADP2Oi8mjkpj1wg%3A1",
+  "removeBG": "VXCRZM56igxDAjPf87PbXz7z",
+  "musixMatch": "",
+  "stickerMetadata": {
+    "packauthor": "Moody Bot",
+    "packname": "Moody Bot"
+  },
+  "BASE_URL": "",
+  "MSG": {
+    "botNotAdmin": "*🚩 El bot necesita ser administrador.*",
+    "notGroupAdmin": "*🚩 Este comando es solo para administradores del grupo.*",
+    "mentionedOrQuotedJid": "*🚩Responde a un mensaje o menciona al usuario.*",
+    "groupMsg": "*🚩 Este comando solo puede ser usado en grupos.*",
+    "owner": "*🚩 Este comando solo puede ser usado por el creador.*",
+    "userBanned": "*🚩 Haz sido baneado del uso del bot.*",
+    "userPremium": "*🚩 Este comando solo puede ser usado por usuarios premium.*",
+    "notModerator": "*🚩 Este comando solo puede ser usado por moderadores del bot.*",
+    "banchatmsg": "*🚩 El bot esta baneado en este grupo.*",
+    "success": "*🚩 Ejecutado exitosamente.*",
+    "private": "*🚩 Comando solo para chat privado.*"
+  },
+  "SESSION_NAME": "auth/main",
+  "BOT_CONFIG": {
+    "BOT_NAME": "ムーディー・ボット",
+    "CREATOR_NAME": "Moody",
+    "MONEY_SYMBOL": "$",
+    "MONEY_NAME": "clarencedolares"
+  },
+  "onlyowner": false
+}

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc14",
+    "undici": "^7.30.2"
+  }
+}
