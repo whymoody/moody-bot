@@ -1,8 +1,5 @@
 const { default: axios } = require("axios");
 
-const API_KEY = "9f5ed312c412fce0c6e0b5fa550be222e2e5eb193b93918cd953bb659ca1ac48e92d4f2353b9bb39161e4c6410f94b0c3eeece0dd2b3679cf6ceb9acc57423a3";
-const USER_ID = "6968699";
-
 module.exports = {
   tags: ["search"],
   args: ["query"],
@@ -13,6 +10,12 @@ module.exports = {
     if (!text) return m.reply("*🍟 Ingresa el título/tags que buscas en Rule34.*");
 
     try {
+      const apiKey = process.env.RULE34_API_KEY;
+      const userId = process.env.RULE34_USER_ID;
+      if (!apiKey || !userId) {
+        return m.reply("*Configura RULE34_API_KEY y RULE34_USER_ID en el archivo .env del bot.*");
+      }
+
       const res = await axios.get("https://api.rule34.xxx/index.php", {
         params: {
           page: "dapi",
@@ -21,8 +24,8 @@ module.exports = {
           json: 1,
           limit: 100,          // máximo recomendado
           tags: text.replace(/\s+/g, "+"), // espacios → +
-          api_key: API_KEY,
-          user_id: USER_ID
+          api_key: apiKey,
+          user_id: userId
         },
         timeout: 15000
       });
